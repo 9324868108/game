@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Wish Creator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuid.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">Birthday Wish Creator</h1>
+            <p class="subtitle">Create a special birthday message with 3D animations and games!</p>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <form id="wishForm">
+                    <div class="form-section">
+                        <h2>Friend's Details</h2>
+                        
+                        <div class="form-group">
+                            <label for="friendName">Friend's Name</label>
+                            <input type="text" id="friendName" name="friendName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Friend's Age</label>
+                            <input type="number" id="age" name="age" min="1" max="150" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2>Your Message</h2>
+                        
+                        <div class="form-group">
+                            <label for="memories">Memorable Moments</label>
+                            <textarea id="memories" name="memories" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Birthday Message</label>
+                            <textarea id="message" name="message" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="senderName">Your Name</label>
+                            <input type="text" id="senderName" name="senderName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="photo">Upload Photo (Optional)</label>
+                            <input type="file" id="photo" name="photo" accept="image/*">
+                            <div id="photoPreview" class="photo-preview"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" id="submitBtn" class="btn btn-primary">
+                            Create Birthday Wish
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="linkContainer" class="link-container hidden">
+                <div class="loading-animation" id="loadingAnimation">
+                    <div class="cake">
+                        <div class="cake-base"></div>
+                        <div class="cake-middle"></div>
+                        <div class="cake-top"></div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                    </div>
+                    <p>Creating your birthday wish...</p>
+                    <div class="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                </div>
+
+                <div id="linkResult" class="link-result hidden">
+                    <h2>Your Birthday Wish is Ready!</h2>
+                    <p>Share this link with your friend:</p>
+                    <div class="link-box">
+                        <input type="text" id="wishLink" readonly>
+                        <button id="copyBtn" class="btn btn-secondary">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <p class="note">Your friend will need to win a game to see your message!</p>
+                    <button id="createNewBtn" class="btn btn-outline">Create Another Wish</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Birthday Wish Creator. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
