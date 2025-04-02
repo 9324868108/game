@@ -1,0 +1,129 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const wishForm = document.getElementById('wishForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const linkContainer = document.getElementById('linkContainer');
+    const loadingAnimation = document.getElementById('loadingAnimation');
+    const linkResult = document.getElementById('linkResult');
+    const wishLink = document.getElementById('wishLink');
+    const copyBtn = document.getElementById('copyBtn');
+    const createNewBtn = document.getElementById('createNewBtn');
+    const photoInput = document.getElementById('photo');
+    const photoPreview = document.getElementById('photoPreview');
+    const progress = document.getElementById('progress');
+
+    // Photo preview functionality
+    if (photoInput) {
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    photoPreview.style.backgroundImage = `url(${event.target.result})`;
+                    photoPreview.textContent = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Form submission
+    if (wishForm) {
+        wishForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            
+            // Show loading animation
+            linkContainer.classList.remove('hidden');
+            loadingAnimation.classList.remove('hidden');
+            
+            // Simulate progress
+            let progressValue = 0;
+            const progressInterval = setInterval(() => {
+                progressValue += 5;
+                progress.style.width = `${progressValue}%`;
+                
+                if (progressValue >= 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        showLinkResult();
+                    }, 500);
+                }
+            }, 150);
+            
+            // Get form data
+            const formData = new FormData(wishForm);
+            const wishData = {
+                id: uuid.v4(),
+                friendName: formData.get('friendName'),
+                age: formData.get('age'),
+                memories: formData.get('memories'),
+                message: formData.get('message'),
+                senderName: formData.get('senderName'),
+                timestamp: new Date().toISOString()
+            };
+            
+            // Handle photo if present
+            if (photoInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    wishData.photo = event.target.result;
+                    saveWishData(wishData);
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                saveWishData(wishData);
+            }
+        });
+    }
+    
+    // Save wish data to localStorage
+    function saveWishData(wishData) {
+        // Store in localStorage
+        localStorage.setItem(`wish_${wishData.id}`, JSON.stringify(wishData));
+        
+        // Generate link
+        const baseUrl = window.location.origin;
+        const gameUrl = `${baseUrl}/game.html?id=${wishData.id}`;
+        
+        // Update UI with link
+        wishLink.value = gameUrl;
+    }
+    
+    // Show link result
+    function showLinkResult() {
+        loadingAnimation.classList.add('hidden');
+        linkResult.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Create Birthday Wish';
+    }
+    
+    // Copy link to clipboard
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+            wishLink.select();
+            document.execCommand('copy');
+            
+            // Show copied feedback
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+            }, 2000);
+        });
+    }
+    
+    // Create new wish
+    if (createNewBtn) {
+        createNewBtn.addEventListener('click', function() {
+            wishForm.reset();
+            photoPreview.style.backgroundImage = '';
+            photoPreview.textContent = '';
+            linkContainer.classList.add('hidden');
+        });
+    }
+});
